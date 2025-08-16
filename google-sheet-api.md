@@ -78,7 +78,7 @@ const fetchSheetData1 = async (): Promise<SheetDataType1[]> => {
       imageUrl: row[2] || "",
     }));
   } catch (error) {
-    console.error('데이터 로드 실패:', error);
+    console.error("데이터 로드 실패:", error);
     return [];
   }
 };
@@ -98,7 +98,7 @@ const fetchSheetData2 = async (): Promise<SheetDataType2[]> => {
       imageUrl: row[2] || "",
     }));
   } catch (error) {
-    console.error('데이터 로드 실패:', error);
+    console.error("데이터 로드 실패:", error);
     return [];
   }
 };
@@ -118,7 +118,7 @@ const fetchSheetData3 = async (): Promise<SheetDataType3[]> => {
       imageUrl: row[2] || "",
     }));
   } catch (error) {
-    console.error('데이터 로드 실패:', error);
+    console.error("데이터 로드 실패:", error);
     return [];
   }
 };
@@ -138,7 +138,7 @@ const fetchSheetData4 = async (): Promise<SheetDataType4[]> => {
       imageUrl: row[2] || "",
     }));
   } catch (error) {
-    console.error('데이터 로드 실패:', error);
+    console.error("데이터 로드 실패:", error);
     return [];
   }
 };
@@ -152,6 +152,8 @@ export default function ComponentUsingSheet() {
 
   // 화면에 가장 먼저 노출되는 부분 데이터 로드
   useEffect(() => {
+    // 먼저 로드할 데이터의 로딩이 완료되면 다시 로딩하지 않음.
+    if (isFirstDataLoadComplete) return;
     const loadFirst = async () => {
       const [data1, data2] = await Promise.all([
         fetchSheetData1(),
@@ -163,7 +165,7 @@ export default function ComponentUsingSheet() {
     };
 
     loadFirst();
-  }, []);
+  }, [isFirstDataLoadComplete]);
 
   // 화면 스크롤 후에 노출되는 부분 데이터 로드
   useEffect(() => {
@@ -223,3 +225,4 @@ export default function ComponentUsingSheet() {
     </div>
   );
 }
+```
