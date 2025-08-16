@@ -9,11 +9,13 @@
 
 - 투어비스 및 프리비아의 프로모션 또는 크로스셀 페이지를 v0를 이용하여 개발할 때 아래의 예제 코드를 참고해서 작성합니다.
 
-> `actions.ts`
+> 서버 액션을 사용하는 모듈 `actions.ts`
+
+- 서버 액션을 사용하는 함수 모듈은 클라이언트 컴포넌트에서 사용하려면 별도의 파일로 분리되어야 합니다.
+- 서버 컴포넌트에서는 함수 내에 `'user server';`를 포함하여 사용할 수 있습니다.
 
 ```typescript
 "use server";
-
 export async function fetchMarketingSheetData(
   documentId: string,
   sheetName: string,
@@ -29,8 +31,17 @@ export async function fetchMarketingSheetData(
       },
     }
   );
-  const data = (await response.json()) as { data: string[][] };
-  return data.data;
+  if (response) {
+    if (response.ok) {
+      const data = await response.json();
+      return data.data as string[][];
+    } else {
+      const errorText = await response.text();
+      throw new Error(`response status ${response.status}, text ${errorText}`);
+    }
+  } else {
+    throw new Error("response is null");
+  }
 }
 ```
 
